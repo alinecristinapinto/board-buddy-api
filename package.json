@@ -1,0 +1,19 @@
+{
+  "name": "board-buddy-api",
+  "version": "1.0.0",
+  "description": "BoardBuddy is a platform that connects a vibrant community of game enthusiasts, allowing them to share and borrow a wide variety of games.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/app.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
