@@ -19,6 +19,8 @@ BoardBuddy é uma plataforma visa conectar uma vasta comunidade de entusiastas d
 
 ## Arquitetura
 [TODO]
+#### Autenticação e Autorizaçã
+- https://supabase.com/docs/guides/auth/architecture
 
 ## Autores
 
