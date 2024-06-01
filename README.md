@@ -14,6 +14,14 @@ BoardBuddy é uma plataforma visa conectar uma vasta comunidade de entusiastas d
 ```bash
   npm start 
 ```
+Acessar: http://localhost:3000/docs/
+
+## Desenvolvimento
+
+```bash
+  npm run dev 
+```
+
 ## Testes
 [TODO]
 
