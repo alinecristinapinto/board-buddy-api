@@ -1,5 +1,6 @@
 import { Controller, Route, Tags, Post, Body } from 'tsoa';
-// import { AuthenticationApiAdapter } from '../../api/supabase/authentication-api-adapter';
+
+import { AuthenticationApiAdapter } from '../../api/supabase/authentication-api-adapter';
 import { UserSignIn } from '../../../core/authentication/ports/authentication.types';
 
 @Route('authentication')
@@ -7,7 +8,6 @@ import { UserSignIn } from '../../../core/authentication/ports/authentication.ty
 export class AuthenticationController extends Controller {
   @Post('/sign-in')
   signIn(@Body() body: UserSignIn) {
-    console.log(body);
-    // const { signIn } = AuthenticationApiAdapter();
+    const { signIn } = new AuthenticationApiAdapter();
   }
 }
