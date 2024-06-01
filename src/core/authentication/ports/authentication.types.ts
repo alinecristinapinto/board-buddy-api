@@ -15,3 +15,17 @@ export type RequestPasswordReset = {
 export type PasswordReset = {
   password: string;
 };
+
+export type User = {
+  id: string;
+  email?: string;
+};
+
+export type Session = {
+  access_token: string;
+  user: User;
+};
+
+export type UserResponse = {
+  session: Session | null;
+};

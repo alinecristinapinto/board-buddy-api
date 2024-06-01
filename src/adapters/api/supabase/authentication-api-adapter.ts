@@ -8,17 +8,19 @@ import { supabase } from '../../helpers/supabase-client';
 
 export class AuthenticationApiAdapter {
   signUp = async ({ email, password }: UserSignUp) => {
-    const { data, error } = await supabase().auth.signUp({
+    await supabase().auth.signUp({
       email,
       password,
     });
   };
 
   signIn = async ({ email, password }: UserSignIn) => {
-    const { data, error } = await supabase().auth.signInWithPassword({
+    const { data } = await supabase().auth.signInWithPassword({
       email,
       password,
     });
+
+    return data;
   };
 
   requestPasswordReset = async ({ email }: RequestPasswordReset) => {

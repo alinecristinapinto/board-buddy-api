@@ -3,10 +3,18 @@ import { AuthenticationController } from '../adapters/controller/authentication/
 
 const router = express.Router();
 
-router.get('/authentication/sign-in', async (req: Request, res: Response) => {
-  const controller = new AuthenticationController();
-  const response = await controller.signIn(req.body);
+// -------------- Authentication --------------
+const authentication = new AuthenticationController();
+
+router.post('/authentication/sign-up', async (req: Request, res: Response) => {
+  const response = await authentication.signUp(req.body);
   return res.send(response);
 });
+
+router.post('/authentication/sign-in', async (req: Request, res: Response) => {
+  const response = await authentication.signIn(req.body);
+  return res.send(response);
+});
+// -------------- End Authentication --------------
 
 export default router;
