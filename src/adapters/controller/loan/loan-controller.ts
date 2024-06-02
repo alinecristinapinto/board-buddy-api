@@ -10,9 +10,9 @@ import { LoanServices } from '../../../core/loan/usecases/loan-services';
 export class LoanController extends Controller {
   @SuccessResponse('201', 'Created')
   //   @Security('jwt')
-  @Post('/add')
-  public async add(@Body() body: BorrowGame): Promise<void> {
+  @Post('/create')
+  public async create(@Body() body: BorrowGame): Promise<void> {
     this.setStatus(201);
-    return new LoanServices(new LoanRepository()).add(body);
+    return new LoanServices(new LoanRepository()).create(body);
   }
 }

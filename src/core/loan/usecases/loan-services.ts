@@ -8,7 +8,7 @@ export class LoanServices {
     this.repository = repository;
   }
 
-  public async add(loan: BorrowGame): Promise<void> {
+  public async create(loan: BorrowGame): Promise<void> {
     try {
       await this.repository.create(loan);
     } catch (error) {
