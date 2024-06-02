@@ -4,7 +4,7 @@ import { AuthenticationApiAdapter } from '../../api/supabase/authentication-api-
 import { UserResponse, UserSignIn, UserSignUp } from '../../../core/authentication/ports/authentication.types';
 
 @Route('authentication')
-@Tags('AuthenticationController')
+@Tags('Authentication')
 export class AuthenticationController extends Controller {
   @SuccessResponse('201', 'Created')
   @Post('/sign-up')

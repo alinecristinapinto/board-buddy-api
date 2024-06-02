@@ -1,24 +1,30 @@
 import {
   PasswordReset,
   RequestPasswordReset,
+  UserResponse,
   UserSignIn,
   UserSignUp,
 } from '../../../core/authentication/ports/authentication.types';
 import { supabase } from '../../helpers/supabase-client';
+import { APIException, StatusCode } from '../../helpers/api-exception';
 
 export class AuthenticationApiAdapter {
   signUp = async ({ email, password }: UserSignUp) => {
-    await supabase().auth.signUp({
+    const { error } = await supabase().auth.signUp({
       email,
       password,
     });
+
+    if (error) throw new APIException(error.message, (error.status as StatusCode) ?? 500);
   };
 
-  signIn = async ({ email, password }: UserSignIn) => {
-    const { data } = await supabase().auth.signInWithPassword({
+  signIn = async ({ email, password }: UserSignIn): Promise<UserResponse> => {
+    const { data, error } = await supabase().auth.signInWithPassword({
       email,
       password,
     });
+
+    if (error) throw new APIException(error.message, (error.status as StatusCode) ?? 500);
 
     return data;
   };

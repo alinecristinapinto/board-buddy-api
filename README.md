@@ -22,6 +22,12 @@ Acessar: http://localhost:3000/docs/
   npm run dev 
 ```
 
+#### Atualizar routes
+
+```bash
+npx tsoa routes
+```
+
 ## Testes
 [TODO]
 
