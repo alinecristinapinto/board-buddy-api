@@ -3,6 +3,7 @@ export type Game = {
   name: string;
   description: string;
   user_id: string;
+  available: boolean;
 };
 
 export type AddGame = Omit<Game, 'id'>;

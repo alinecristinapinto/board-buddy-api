@@ -4,6 +4,7 @@ import { LoanRepository } from '../../db/postgresql-supabase/loan/loan-repositor
 
 import { BorrowGame } from '../../../core/loan/ports/loan.types';
 import { LoanServices } from '../../../core/loan/usecases/loan-services';
+import { GameRepository } from '../../db/postgresql-supabase/game/game-repository';
 
 @Route('loan')
 @Tags('Loan')
@@ -13,6 +14,6 @@ export class LoanController extends Controller {
   @Post('/create')
   public async create(@Body() body: BorrowGame): Promise<void> {
     this.setStatus(201);
-    return new LoanServices(new LoanRepository()).create(body);
+    return new LoanServices(new LoanRepository(), new GameRepository()).create(body);
   }
 }

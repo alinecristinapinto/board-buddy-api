@@ -20,7 +20,7 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 const models: TsoaRoute.Models = {
     "Pick_Game.Exclude_keyofGame.id__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"description":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"description":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true},"available":{"dataType":"boolean","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Omit_Game.id_": {
@@ -60,7 +60,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_Loan.Exclude_keyofLoan.id-or-delivered_at__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"estimated_delivery":{"dataType":"datetime","required":true},"game_id":{"dataType":"string","required":true},"lessee_user_id":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"estimated_delivery":{"dataType":"datetime","required":true},"game_id":{"dataType":"double","required":true},"lessee_user_id":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Omit_Loan.id-or-delivered_at_": {
