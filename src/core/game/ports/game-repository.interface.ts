@@ -1,5 +1,5 @@
-import { Game } from './game.types';
+import { AddGame } from './game.types';
 
 export interface IGameRepository {
-  create(game: Game): Promise<void>;
+  create(game: AddGame): Promise<void>;
 }

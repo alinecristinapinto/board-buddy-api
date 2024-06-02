@@ -9,7 +9,7 @@ export const errorHandler = (error: unknown, req: Request, res: Response, next: 
   }
   if (error instanceof Error) {
     return res.status(500).json({
-      message: 'Internal Server Error',
+      message: error.message,
     });
   }
   next();

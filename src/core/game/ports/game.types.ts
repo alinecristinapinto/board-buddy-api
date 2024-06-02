@@ -4,3 +4,5 @@ export type Game = {
   description: string;
   user_id: string;
 };
+
+export type AddGame = Omit<Game, 'id'>;

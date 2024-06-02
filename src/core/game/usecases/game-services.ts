@@ -1,5 +1,5 @@
 import { IGameRepository } from '../ports/game-repository.interface';
-import { Game } from '../ports/game.types';
+import { AddGame } from '../ports/game.types';
 
 export class GameServices {
   private repository: IGameRepository;
@@ -8,7 +8,7 @@ export class GameServices {
     this.repository = repository;
   }
 
-  public async add(game: Game): Promise<void> {
+  public async add(game: AddGame): Promise<void> {
     try {
       await this.repository.create(game);
     } catch (error) {
