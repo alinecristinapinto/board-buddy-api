@@ -3,7 +3,7 @@ import { Game } from '../../../../core/game/ports/game.types';
 
 import { Database } from '../helpers/supabase-database';
 import { supabase } from '../../../helpers/supabase-client';
-import { APIException } from '../../../helpers/api-exception';
+import { APIException } from '../../../../core/helpers/api-exception';
 
 export class GameRepository implements IGameRepository {
   async create(game: Game): Promise<void> {

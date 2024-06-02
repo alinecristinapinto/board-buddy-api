@@ -11,7 +11,8 @@
   },
   "routes": {
     "routesDir": "./src/adapters/controller",
-    "authenticationModule": "./src/config/middleware/authentication-handler.ts"
+    "authenticationModule": "./src/config/middleware/authentication-handler.ts",
+    "middleware": "express"
   },
   "spec": {
     "outputDirectory": "public",

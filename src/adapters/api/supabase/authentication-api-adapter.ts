@@ -6,7 +6,7 @@ import {
   UserSignUp,
 } from '../../../core/authentication/ports/authentication.types';
 import { supabase } from '../../helpers/supabase-client';
-import { APIException, StatusCode } from '../../helpers/api-exception';
+import { APIException, StatusCode } from '../../../core/helpers/api-exception';
 
 export class AuthenticationApiAdapter {
   signUp = async ({ email, password }: UserSignUp) => {

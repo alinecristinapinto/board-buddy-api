@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { APIException } from '../../adapters/helpers/api-exception';
+import { APIException } from '../../core/helpers/api-exception';
 
 export const errorHandler = (error: unknown, req: Request, res: Response, next: NextFunction): Response | void => {
   if (error instanceof APIException) {

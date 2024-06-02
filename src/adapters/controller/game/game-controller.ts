@@ -9,7 +9,7 @@ import { GameServices } from '../../../core/game/usecases/game-services';
 @Tags('Game')
 export class GameController extends Controller {
   @SuccessResponse('201', 'Created')
-  //@Security('jwt')
+  //   @Security('jwt')
   @Post('/add')
   public async add(@Body() body: Game): Promise<void> {
     this.setStatus(201);

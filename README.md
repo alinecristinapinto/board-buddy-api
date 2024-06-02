@@ -25,7 +25,7 @@ Acessar: http://localhost:3000/docs/
 #### Atualizar routes
 
 ```bash
-npx tsoa spec && tsoa routes
+npx tsoa routes
 ```
 #### Issue com Swagger & Tsoa
 Swagger está indo sem a definição do securitySchemes. Adicionar na mão.
