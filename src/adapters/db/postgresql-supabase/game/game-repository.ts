@@ -30,4 +30,20 @@ export class GameRepository implements IGameRepository {
 
     return data[0];
   }
+
+  async findByName(name: string): Promise<Game[]> {
+    const { data, error } = await supabase<Database>().from('Game').select().eq('name', name).returns<Game[]>();
+
+    if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
+
+    return data;
+  }
+
+  async findAll(): Promise<Game[]> {
+    const { data, error } = await supabase<Database>().from('Game').select().returns<Game[]>();
+
+    if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
+
+    return data;
+  }
 }
