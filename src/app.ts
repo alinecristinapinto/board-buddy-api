@@ -27,6 +27,7 @@ app.use(
   swaggerUi.setup(undefined, {
     swaggerOptions: {
       url: '/swagger.json',
+      explorer: true,
     },
   }),
 );

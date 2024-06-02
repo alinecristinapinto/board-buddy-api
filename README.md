@@ -25,7 +25,20 @@ Acessar: http://localhost:3000/docs/
 #### Atualizar routes
 
 ```bash
-npx tsoa routes
+npx tsoa spec && tsoa routes
+```
+#### Issue com Swagger & Tsoa
+Swagger está indo sem a definição do securitySchemes. Adicionar na mão.
+
+```bash
+"securitySchemes": {
+  "jwt": {
+    "type": "apiKey",
+    "name": "x-access-token",
+    "in": "header",
+    "description": "JWT Authorization header using the x-access-token scheme"
+  }
+}
 ```
 
 ## Testes
