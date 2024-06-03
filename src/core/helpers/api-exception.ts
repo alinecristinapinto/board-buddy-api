@@ -1,4 +1,4 @@
-export type StatusCode = 400 | 401 | 500;
+export type StatusCode = 400 | 401 | 404 | 500;
 
 export class APIException extends Error {
   status: StatusCode | undefined;
