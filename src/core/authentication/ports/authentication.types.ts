@@ -1,20 +1,13 @@
-export type UserSignUp = {
+export type Profile = {
   email: string;
   password: string;
+  name: string;
+  blocked: boolean;
 };
 
-export type UserSignIn = {
-  email: string;
-  password: string;
-};
+export type UserSignUp = Profile;
 
-export type RequestPasswordReset = {
-  email: string;
-};
-
-export type PasswordReset = {
-  password: string;
-};
+export type UserSignIn = Pick<Profile, 'email' | 'password'>;
 
 export type User = {
   id: string;

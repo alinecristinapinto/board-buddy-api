@@ -8,7 +8,7 @@ import { APIException } from '../../../../core/helpers/api-exception';
 export class GameRepository implements IGameRepository {
   async create(game: AddGame): Promise<void> {
     const { error } = await supabase<Database>()
-      .from('Game')
+      .from('game')
       .insert({ name: game.name, description: game.description, available: true, user_id: game.user_id });
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
@@ -16,7 +16,7 @@ export class GameRepository implements IGameRepository {
 
   async update(game: Game): Promise<void> {
     const { error } = await supabase<Database>()
-      .from('Game')
+      .from('game')
       .update({ name: game.name, description: game.description, available: game.available, user_id: game.user_id })
       .eq('id', game.id);
 
@@ -24,7 +24,7 @@ export class GameRepository implements IGameRepository {
   }
 
   async findById(id: number): Promise<Game> {
-    const { data, error } = await supabase<Database>().from('Game').select().eq('id', id).returns<Game[]>().limit(1);
+    const { data, error } = await supabase<Database>().from('game').select().eq('id', id).returns<Game[]>().limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
@@ -32,7 +32,7 @@ export class GameRepository implements IGameRepository {
   }
 
   async findByName(name: string): Promise<Game[]> {
-    const { data, error } = await supabase<Database>().from('Game').select().eq('name', name).returns<Game[]>();
+    const { data, error } = await supabase<Database>().from('game').select().eq('name', name).returns<Game[]>();
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
@@ -40,7 +40,7 @@ export class GameRepository implements IGameRepository {
   }
 
   async findAll(): Promise<Game[]> {
-    const { data, error } = await supabase<Database>().from('Game').select().returns<Game[]>();
+    const { data, error } = await supabase<Database>().from('game').select().returns<Game[]>();
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 

@@ -3,7 +3,7 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
-      Game: {
+      game: {
         Row: {
           available: boolean | null;
           created_at: string;
@@ -38,7 +38,7 @@ export type Database = {
           },
         ];
       };
-      Loan: {
+      loan: {
         Row: {
           created_at: string;
           delivered_at: string | null;
@@ -68,7 +68,7 @@ export type Database = {
             foreignKeyName: 'Emprestimo_id_jogo_fkey';
             columns: ['game_id'];
             isOneToOne: false;
-            referencedRelation: 'Game';
+            referencedRelation: 'game';
             referencedColumns: ['id'];
           },
           {
@@ -80,7 +80,7 @@ export type Database = {
           },
         ];
       };
-      Penalty: {
+      penalty: {
         Row: {
           created_at: string;
           loan_id: number;
@@ -101,7 +101,33 @@ export type Database = {
             foreignKeyName: 'Multa_id_emprestimo_fkey';
             columns: ['loan_id'];
             isOneToOne: true;
-            referencedRelation: 'Loan';
+            referencedRelation: 'loan';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      profile: {
+        Row: {
+          blocked: boolean | null;
+          id: string;
+          name: string | null;
+        };
+        Insert: {
+          blocked?: boolean | null;
+          id: string;
+          name?: string | null;
+        };
+        Update: {
+          blocked?: boolean | null;
+          id?: string;
+          name?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Profile_id_fkey';
+            columns: ['id'];
+            isOneToOne: true;
+            referencedRelation: 'users';
             referencedColumns: ['id'];
           },
         ];

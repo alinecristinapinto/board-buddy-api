@@ -7,7 +7,7 @@ import { AddPenalty, Penalty, UpdatePenalty } from '../../../../core/penalty/por
 
 export class PenaltyRepository implements IPenaltyRepository {
   async create(penalty: AddPenalty): Promise<void> {
-    const { error } = await supabase<Database>().from('Penalty').insert({
+    const { error } = await supabase<Database>().from('penalty').insert({
       loan_id: penalty.loan_id,
     });
 
@@ -16,7 +16,7 @@ export class PenaltyRepository implements IPenaltyRepository {
 
   async update(penalty: UpdatePenalty): Promise<void> {
     const { error } = await supabase<Database>()
-      .from('Penalty')
+      .from('penalty')
       .update({
         payed_at: new Date(penalty.payed_at).toUTCString(),
       })
@@ -27,7 +27,7 @@ export class PenaltyRepository implements IPenaltyRepository {
 
   async findById(loan_id: number): Promise<Penalty> {
     const { data, error } = await supabase<Database>()
-      .from('Penalty')
+      .from('penalty')
       .select()
       .eq('loan_id', loan_id)
       .returns<Penalty[]>()

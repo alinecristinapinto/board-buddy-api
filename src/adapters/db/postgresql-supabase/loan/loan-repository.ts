@@ -8,7 +8,7 @@ import { APIException } from '../../../../core/helpers/api-exception';
 
 export class LoanRepository implements ILoanRepository {
   async create(loan: BorrowGame): Promise<void> {
-    const { error } = await supabase<Database>().from('Loan').insert({
+    const { error } = await supabase<Database>().from('loan').insert({
       game_id: loan.game_id,
       estimated_delivery_at: loan.estimated_delivery_at.toUTCString(),
       lessee_user_id: loan.lessee_user_id,
@@ -19,7 +19,7 @@ export class LoanRepository implements ILoanRepository {
 
   async update(retGame: ReturnGame): Promise<void> {
     const { error } = await supabase<Database>()
-      .from('Loan')
+      .from('loan')
       .update({
         game_id: retGame.game_id,
         estimated_delivery_at: new Date(retGame.estimated_delivery_at).toUTCString(),
@@ -32,7 +32,7 @@ export class LoanRepository implements ILoanRepository {
   }
 
   async findById(id: number): Promise<Loan> {
-    const { data, error } = await supabase<Database>().from('Loan').select().eq('id', id).returns<Loan[]>().limit(1);
+    const { data, error } = await supabase<Database>().from('loan').select().eq('id', id).returns<Loan[]>().limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
