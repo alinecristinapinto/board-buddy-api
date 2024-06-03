@@ -1,13 +1,13 @@
-export type Profile = {
+export type Auth = {
   email: string;
   password: string;
   name: string;
   blocked: boolean;
 };
 
-export type UserSignUp = Profile;
+export type UserSignUp = Auth;
 
-export type UserSignIn = Pick<Profile, 'email' | 'password'>;
+export type UserSignIn = Pick<Auth, 'email' | 'password'>;
 
 export type User = {
   id: string;
