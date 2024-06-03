@@ -3,7 +3,7 @@ import { supabase } from '../../../helpers/supabase-client';
 import { APIException } from '../../../../core/helpers/api-exception';
 
 import { IPenaltyRepository } from '../../../../core/penalty/ports/penalty-repository.interface';
-import { AddPenalty, UpdatePenalty } from '../../../../core/penalty/ports/penalty.types';
+import { AddPenalty, Penalty, UpdatePenalty } from '../../../../core/penalty/ports/penalty.types';
 
 export class PenaltyRepository implements IPenaltyRepository {
   async create(penalty: AddPenalty): Promise<void> {
@@ -23,5 +23,18 @@ export class PenaltyRepository implements IPenaltyRepository {
       .eq('loan_id', penalty.loan_id);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
+  }
+
+  async findById(loan_id: number): Promise<Penalty> {
+    const { data, error } = await supabase<Database>()
+      .from('Penalty')
+      .select()
+      .eq('loan_id', loan_id)
+      .returns<Penalty[]>()
+      .limit(1);
+
+    if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
+
+    return data[0];
   }
 }

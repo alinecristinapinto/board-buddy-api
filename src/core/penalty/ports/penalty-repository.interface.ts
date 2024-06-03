@@ -1,6 +1,7 @@
-import { AddPenalty, UpdatePenalty } from './penalty.types';
+import { AddPenalty, Penalty, UpdatePenalty } from './penalty.types';
 
 export interface IPenaltyRepository {
-  create(loan: AddPenalty): Promise<void>;
-  update(loan: UpdatePenalty): Promise<void>;
+  create(penalty: AddPenalty): Promise<void>;
+  update(penalty: UpdatePenalty): Promise<void>;
+  findById(loan_id: number): Promise<Penalty>;
 }
