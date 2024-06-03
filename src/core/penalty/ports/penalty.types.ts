@@ -6,4 +6,4 @@ export type Penalty = {
 
 export type AddPenalty = Pick<Penalty, 'loan_id'>;
 export type PayPenalty = Pick<Penalty, 'loan_id'> & { profile_id: string };
-export type UpdatePenalty = Omit<Penalty, 'created_at'>;
+export type UpdatePenalty = Pick<Penalty, 'loan_id'> & { payed_at: Date };
