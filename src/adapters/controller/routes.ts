@@ -73,6 +73,16 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"Omit_Loan.id-or-delivered_at_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_Loan.id_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReturnGameRequest": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_Loan.id_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
@@ -173,7 +183,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/loan/create',
+        app.post('/loans/create',
             ...(fetchMiddlewares<RequestHandler>(LoanController)),
             ...(fetchMiddlewares<RequestHandler>(LoanController.prototype.create)),
 
@@ -197,6 +207,36 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/loans/deliver',
+            ...(fetchMiddlewares<RequestHandler>(LoanController)),
+            ...(fetchMiddlewares<RequestHandler>(LoanController.prototype.deliver)),
+
+            async function LoanController_deliver(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    body: {"in":"body","name":"body","required":true,"ref":"ReturnGameRequest"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new LoanController();
+
+              await templateService.apiHandler({
+                methodName: 'deliver',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 204,
               });
             } catch (err) {
                 return next(err);
