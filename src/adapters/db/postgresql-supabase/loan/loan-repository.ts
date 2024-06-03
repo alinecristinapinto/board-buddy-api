@@ -5,7 +5,6 @@ import { BorrowGame, Loan, ReturnGame } from '../../../../core/loan/ports/loan.t
 import { Database } from '../helpers/supabase-database';
 import { supabase } from '../../../helpers/supabase-client';
 import { APIException } from '../../../../core/helpers/api-exception';
-import { format } from 'date-fns';
 
 export class LoanRepository implements ILoanRepository {
   async create(loan: BorrowGame): Promise<void> {

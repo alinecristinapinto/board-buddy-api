@@ -3,14 +3,17 @@ import { IGameRepository } from '../../game/ports/game-repository.interface';
 import { APIException } from '../../helpers/api-exception';
 import { ILoanRepository } from '../ports/loan-repository.interface';
 import { BorrowGame, DeliverLoan } from '../ports/loan.types';
+import { IPenaltyRepository } from '../../penalty/ports/penalty-repository.interface';
 
 export class LoanServices {
   private repository: ILoanRepository;
   private gameRepository: IGameRepository;
+  private penaltyRepository: IPenaltyRepository;
 
-  constructor(repository: ILoanRepository, gameRepository: IGameRepository) {
+  constructor(repository: ILoanRepository, gameRepository: IGameRepository, penaltyRepository: IPenaltyRepository) {
     this.repository = repository;
     this.gameRepository = gameRepository;
+    this.penaltyRepository = penaltyRepository;
   }
 
   public async create(loan: BorrowGame): Promise<void> {
@@ -35,9 +38,10 @@ export class LoanServices {
       const game = await this.gameRepository.findById(loan.game_id);
       const deliveredDate = new Date();
 
-      // Call penalty repository
-      if (isBefore(loan.estimated_delivery_at, deliveredDate))
+      if (isBefore(new Date(loan.estimated_delivery_at), deliveredDate)) {
         console.log('Time to delivery exceed. A penaulty must be generated');
+        this.penaltyRepository.create({ loan_id: loan.id });
+      }
 
       await this.repository.update({ ...loan, delivered_at: deliveredDate });
       await this.gameRepository.update({ ...game, available: true });
