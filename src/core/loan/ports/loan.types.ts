@@ -8,4 +8,4 @@ export type Loan = {
 
 export type BorrowGame = Omit<Loan, 'id' | 'delivered_at'>;
 export type ReturnGame = Loan;
-export type ReturnGameRequest = Pick<Loan, 'id'>;
+export type DeliverLoan = Pick<Loan, 'id'>;

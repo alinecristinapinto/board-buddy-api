@@ -23,7 +23,7 @@ export class LoanRepository implements ILoanRepository {
       .from('Loan')
       .update({
         game_id: retGame.game_id,
-        estimated_delivery_at: retGame.estimated_delivery_at.toUTCString(),
+        estimated_delivery_at: new Date(retGame.estimated_delivery_at).toUTCString(),
         lessee_user_id: retGame.lessee_user_id,
         delivered_at: retGame.delivered_at.toUTCString(),
       })

@@ -1,7 +1,8 @@
+import { isBefore } from 'date-fns';
 import { IGameRepository } from '../../game/ports/game-repository.interface';
 import { APIException } from '../../helpers/api-exception';
 import { ILoanRepository } from '../ports/loan-repository.interface';
-import { BorrowGame, ReturnGame, ReturnGameRequest } from '../ports/loan.types';
+import { BorrowGame, DeliverLoan } from '../ports/loan.types';
 
 export class LoanServices {
   private repository: ILoanRepository;
@@ -25,19 +26,20 @@ export class LoanServices {
     }
   }
 
-  public async deliver({ id }: ReturnGameRequest): Promise<void> {
+  public async deliver({ id }: DeliverLoan): Promise<void> {
     try {
       const loan = await this.repository.findById(id);
-      console.log(loan);
+
+      if (loan.delivered_at) throw new APIException('Loan already delivered', 400);
 
       const game = await this.gameRepository.findById(loan.game_id);
       const deliveredDate = new Date();
 
-      // if (loan.estimated_delivery < deliveredDate) throw new APIException('Time to delivery exceed. A penaulty must be generated', 400);
+      // Call penalty repository
+      if (isBefore(loan.estimated_delivery_at, deliveredDate))
+        console.log('Time to delivery exceed. A penaulty must be generated');
 
       await this.repository.update({ ...loan, delivered_at: deliveredDate });
-      console.log('Passou');
-
       await this.gameRepository.update({ ...game, available: true });
     } catch (error) {
       throw error;

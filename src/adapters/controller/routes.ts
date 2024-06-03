@@ -65,7 +65,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_Loan.Exclude_keyofLoan.id-or-delivered_at__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"estimated_delivery":{"dataType":"datetime","required":true},"game_id":{"dataType":"double","required":true},"lessee_user_id":{"dataType":"string","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"estimated_delivery_at":{"dataType":"datetime","required":true},"game_id":{"dataType":"double","required":true},"lessee_user_id":{"dataType":"string","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Omit_Loan.id-or-delivered_at_": {
@@ -83,7 +83,7 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ReturnGameRequest": {
+    "DeliverLoan": {
         "dataType": "refAlias",
         "type": {"ref":"Pick_Loan.id_","validators":{}},
     },
@@ -307,13 +307,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/loans/deliver',
+        app.put('/loans/deliver',
             ...(fetchMiddlewares<RequestHandler>(LoanController)),
             ...(fetchMiddlewares<RequestHandler>(LoanController.prototype.deliver)),
 
             async function LoanController_deliver(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    body: {"in":"body","name":"body","required":true,"ref":"ReturnGameRequest"},
+                    body: {"in":"body","name":"body","required":true,"ref":"DeliverLoan"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

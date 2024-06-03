@@ -1,8 +1,8 @@
-import { Controller, Route, Tags, Post, Body, SuccessResponse, Security } from 'tsoa';
+import { Controller, Route, Tags, Post, Put, Body, SuccessResponse, Security } from 'tsoa';
 
 import { LoanRepository } from '../../db/postgresql-supabase/loan/loan-repository';
 
-import { BorrowGame, ReturnGameRequest } from '../../../core/loan/ports/loan.types';
+import { BorrowGame, DeliverLoan } from '../../../core/loan/ports/loan.types';
 import { LoanServices } from '../../../core/loan/usecases/loan-services';
 import { GameRepository } from '../../db/postgresql-supabase/game/game-repository';
 
@@ -19,8 +19,8 @@ export class LoanController extends Controller {
 
   @SuccessResponse('204', 'No Content')
   //   @Security('jwt')
-  @Post('/deliver')
-  public async deliver(@Body() body: ReturnGameRequest): Promise<void> {
+  @Put('/deliver')
+  public async deliver(@Body() body: DeliverLoan): Promise<void> {
     this.setStatus(204);
     return new LoanServices(new LoanRepository(), new GameRepository()).deliver(body);
   }
