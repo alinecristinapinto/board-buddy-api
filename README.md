@@ -1,7 +1,7 @@
 
 # BoardBuddy API
 
-BoardBuddy é uma plataforma visa conectar uma vasta comunidade de entusiastas de jogos, permitindo que compartilhem e peguem emprestado uma ampla variedade de jogos. [TODO]
+BoardBuddy é uma plataforma que visa conectar uma vasta comunidade de entusiastas de jogos, permitindo que compartilhem e peguem emprestado uma ampla variedade de jogos.
 
 ## Instalação
 
@@ -42,13 +42,10 @@ Swagger está indo sem a definição do securitySchemes. Adicionar na mão.
 ```
 
 ## Testes
-[TODO]
 
-## Arquitetura
-[TODO]
-#### Autenticação e Autorização
-- https://supabase.com/docs/guides/auth/architecture
-- https://supabase.com/docs/guides/auth/passwords?queryGroups=language&language=js
+```bash
+npx jest
+```
 
 ## Autores
 
