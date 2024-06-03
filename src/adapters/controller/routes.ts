@@ -109,7 +109,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PayPenalty": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_Penalty.loan_id_","validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"Pick_Penalty.loan_id_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"profile_id":{"dataType":"string","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Profile": {

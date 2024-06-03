@@ -3,6 +3,7 @@ import { Controller, Route, Tags, Put, Body, SuccessResponse, Security } from 't
 import { PenaltyRepository } from '../../db/postgresql-supabase/penalty/penalty-repository';
 import { PayPenalty } from '../../../core/penalty/ports/penalty.types';
 import { PenaltyServices } from '../../../core/penalty/usecases/penalty-services';
+import { ProfileRepository } from '../../db/postgresql-supabase/profile/profile-repository';
 
 @Route('penalties')
 @Tags('Penalty')
@@ -12,6 +13,6 @@ export class PenaltyController extends Controller {
   @Put('/pay')
   public async pay(@Body() body: PayPenalty): Promise<void> {
     this.setStatus(204);
-    return new PenaltyServices(new PenaltyRepository()).pay(body);
+    return new PenaltyServices(new PenaltyRepository(), new ProfileRepository()).pay(body);
   }
 }
