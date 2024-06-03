@@ -30,7 +30,7 @@ export class LoanServices {
       if (profile.blocked) throw new APIException('User is blocked. Payment necessary to enable loans', 400);
 
       const game = await this.gameRepository.findById(loan.game_id);
-      if (!game.available) throw new APIException('Game is not available', 400);
+      if (!game || game.available) throw new APIException('Game is not available', 400);
 
       await this.repository.create(loan);
       await this.gameRepository.update({ ...game, available: false });
