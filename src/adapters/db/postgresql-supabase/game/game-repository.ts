@@ -32,7 +32,11 @@ export class GameRepository implements IGameRepository {
   }
 
   async findByName(name: string): Promise<Game[]> {
-    const { data, error } = await supabase<Database>().from('game').select().eq('name', name).returns<Game[]>();
+    const { data, error } = await supabase<Database>()
+      .from('game')
+      .select()
+      .ilike('name', `%${name}%`)
+      .returns<Game[]>();
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
