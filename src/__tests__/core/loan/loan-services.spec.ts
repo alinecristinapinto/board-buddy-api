@@ -59,7 +59,7 @@ describe('LoanServices', () => {
         name: 'Test Game',
         description: 'Test Description',
         user_id: '123',
-        available: false,
+        available: true,
       };
 
       profileRepository.findById.mockResolvedValue(profile);
@@ -99,7 +99,7 @@ describe('LoanServices', () => {
         name: 'Test Game',
         description: 'Test Description',
         user_id: '123',
-        available: true,
+        available: false,
       };
 
       profileRepository.findById.mockResolvedValue(profile);
