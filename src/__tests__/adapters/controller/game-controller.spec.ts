@@ -27,7 +27,9 @@ describe('GameController', () => {
       };
       gameServicesMock.add.mockResolvedValue(undefined);
 
-      await expect(controller.add(addGame)).resolves.toBeUndefined();
+      const resultPromise = controller.add(addGame);
+
+      await expect(resultPromise).resolves.toBeUndefined();
       expect(gameServicesMock.add).toHaveBeenCalledWith(addGame);
       expect(controller.getStatus()).toBe(201);
     });
@@ -42,7 +44,9 @@ describe('GameController', () => {
       const error = new Error('Add game failed');
       gameServicesMock.add.mockRejectedValue(error);
 
-      await expect(controller.add(addGame)).rejects.toThrow('Add game failed');
+      const resultPromise = controller.add(addGame);
+
+      await expect(resultPromise).rejects.toThrow('Add game failed');
       expect(gameServicesMock.add).toHaveBeenCalledWith(addGame);
     });
   });
@@ -58,7 +62,9 @@ describe('GameController', () => {
       };
       gameServicesMock.getDetails.mockResolvedValue(game);
 
-      await expect(controller.getDetails(1)).resolves.toEqual(game);
+      const resultPromise = controller.getDetails(1);
+
+      await expect(resultPromise).resolves.toEqual(game);
       expect(gameServicesMock.getDetails).toHaveBeenCalledWith(1);
       expect(controller.getStatus()).toBe(200);
     });
@@ -67,7 +73,9 @@ describe('GameController', () => {
       const error = new Error('Get details failed');
       gameServicesMock.getDetails.mockRejectedValue(error);
 
-      await expect(controller.getDetails(1)).rejects.toThrow('Get details failed');
+      const resultPromise = controller.getDetails(1);
+
+      await expect(resultPromise).rejects.toThrow('Get details failed');
       expect(gameServicesMock.getDetails).toHaveBeenCalledWith(1);
     });
   });
@@ -89,7 +97,9 @@ describe('GameController', () => {
       const error = new Error('Get all failed');
       gameServicesMock.getAll.mockRejectedValue(error);
 
-      await expect(controller.getAll()).rejects.toThrow('Get all failed');
+      const resultPromise = controller.getAll();
+
+      await expect(resultPromise).rejects.toThrow('Get all failed');
       expect(gameServicesMock.getAll).toHaveBeenCalled();
     });
   });
@@ -101,7 +111,9 @@ describe('GameController', () => {
       ];
       gameServicesMock.getByName.mockResolvedValue(games);
 
-      await expect(controller.getByName('Test Game')).resolves.toEqual(games);
+      const resultPromise = controller.getByName('Test Game');
+
+      await expect(resultPromise).resolves.toEqual(games);
       expect(gameServicesMock.getByName).toHaveBeenCalledWith('Test Game');
       expect(controller.getStatus()).toBe(200);
     });
@@ -110,7 +122,9 @@ describe('GameController', () => {
       const error = new Error('Get by name failed');
       gameServicesMock.getByName.mockRejectedValue(error);
 
-      await expect(controller.getByName('Test Game')).rejects.toThrow('Get by name failed');
+      const resultPromise = controller.getByName('Test Game');
+
+      await expect(resultPromise).rejects.toThrow('Get by name failed');
       expect(gameServicesMock.getByName).toHaveBeenCalledWith('Test Game');
     });
   });

@@ -27,7 +27,9 @@ describe('PenaltyController', () => {
       const payPenalty: PayPenalty = { loan_id: 1, profile_id: 'profile-id' };
       penaltyServicesMock.pay.mockResolvedValue(undefined);
 
-      await expect(controller.pay(payPenalty)).resolves.toBeUndefined();
+      const resultPromise = controller.pay(payPenalty);
+
+      await expect(resultPromise).resolves.toBeUndefined();
       expect(penaltyServicesMock.pay).toHaveBeenCalledWith(payPenalty);
       expect(controller.getStatus()).toBe(204);
     });
@@ -37,7 +39,9 @@ describe('PenaltyController', () => {
       const error = new Error('Pay penalty failed');
       penaltyServicesMock.pay.mockRejectedValue(error);
 
-      await expect(controller.pay(payPenalty)).rejects.toThrow('Pay penalty failed');
+      const resultPromise = controller.pay(payPenalty);
+
+      await expect(resultPromise).rejects.toThrow('Pay penalty failed');
       expect(penaltyServicesMock.pay).toHaveBeenCalledWith(payPenalty);
     });
   });
