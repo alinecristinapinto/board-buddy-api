@@ -3,6 +3,21 @@
 
 BoardBuddy é uma plataforma que visa conectar uma vasta comunidade de entusiastas de jogos, permitindo que compartilhem e peguem emprestado uma ampla variedade de jogos.
 
+## Autores
+
+- Aline Cristina Pinto [@alinecristinapinto](https://github.com/alinecristinapinto)
+- Lucas Victor da Silva Costa [@1LucasVictor](https://github.com/1LucasVictor)
+- Vinícius Gabriel Silva Ferreira[@ViniciusGabrielSF](https://github.com/ViniciusGabrielSF)
+
+## Tecnologias Utilizadas
+
+Esta api é desenvolvida em JavaScript no ambiente Node, utilizando: 
+ - TypeScript para tipagem e coerência
+ - Jest para testes
+ - NPM para gerência de pacotes
+ - Supabase para autenticação e gerência de banco de dados 
+ - Swagger para documentação 
+
 ## Instalação
 
 ```bash
@@ -47,8 +62,3 @@ Swagger está indo sem a definição do securitySchemes. Adicionar na mão.
 npx jest
 ```
 
-## Autores
-
-- [@alinecristinapinto](https://github.com/alinecristinapinto)
-- [@1LucasVictor](https://github.com/1LucasVictor)
-- [@ViniciusGabrielSF](https://github.com/ViniciusGabrielSF)
