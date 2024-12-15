@@ -83,7 +83,9 @@ describe('LoanServices', () => {
 
       profileRepository.findById.mockResolvedValue(profile);
 
-      await expect(loanServices.create(loan)).rejects.toThrow(APIException);
+      const resultPromise = loanServices.create(loan);
+
+      await expect(resultPromise).rejects.toThrow(APIException);
       expect(loanRepository.create).not.toHaveBeenCalled();
     });
 
@@ -105,7 +107,9 @@ describe('LoanServices', () => {
       profileRepository.findById.mockResolvedValue(profile);
       gameRepository.findById.mockResolvedValue(game);
 
-      await expect(loanServices.create(loan)).rejects.toThrow(APIException);
+      const resultPromise = loanServices.create(loan);
+
+      await expect(resultPromise).rejects.toThrow(APIException);
       expect(loanRepository.create).not.toHaveBeenCalled();
     });
   });

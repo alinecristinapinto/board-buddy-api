@@ -12,6 +12,10 @@ describe('AuthenticationApiAdapter', () => {
     adapter = new AuthenticationApiAdapter();
   });
 
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   describe('signUp', () => {
     it('signs up a user successfully', async () => {
       const mockSignUp = jest.fn().mockResolvedValue({ error: null });
@@ -26,7 +30,7 @@ describe('AuthenticationApiAdapter', () => {
         blocked: false,
       };
 
-      await expect(adapter.signUp(userSignUp)).resolves.not.toThrow();
+      await adapter.signUp(userSignUp);
 
       expect(mockSignUp).toHaveBeenCalledWith({
         email: userSignUp.email,
@@ -52,9 +56,10 @@ describe('AuthenticationApiAdapter', () => {
         blocked: false,
       };
 
-      await expect(adapter.signUp(userSignUp)).rejects.toThrow(APIException);
-      await expect(adapter.signUp(userSignUp)).rejects.toThrow('Sign up failed');
+      const resultPromise = adapter.signUp(userSignUp);
 
+      await expect(resultPromise).rejects.toThrow(APIException);
+      await expect(resultPromise).rejects.toThrow('Sign up failed');
       expect(mockSignUp).toHaveBeenCalledWith({
         email: userSignUp.email,
         password: userSignUp.password,
@@ -75,15 +80,16 @@ describe('AuthenticationApiAdapter', () => {
         auth: { signInWithPassword: mockSignIn },
       });
 
-      const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
+      const userSignInMock: UserSignIn = { email: 'test@example.com', password: 'password' };
+      const resultPromise = adapter.signIn(userSignInMock);
 
-      await expect(adapter.signIn(userSignIn)).resolves.toEqual({
-        user: { id: 'user-id', email: 'test@example.com' },
+      await expect(resultPromise).resolves.toEqual({
+        user: { id: 'user-id', email: userSignInMock.email },
       });
 
       expect(mockSignIn).toHaveBeenCalledWith({
-        email: userSignIn.email,
-        password: userSignIn.password,
+        email: userSignInMock.email,
+        password: userSignInMock.password,
       });
     });
 
@@ -95,15 +101,15 @@ describe('AuthenticationApiAdapter', () => {
       (supabase as jest.Mock).mockReturnValue({
         auth: { signInWithPassword: mockSignIn },
       });
+      const userSignInMock: UserSignIn = { email: 'test@example.com', password: 'password' };
+      const resultPromise = adapter.signIn(userSignInMock);
 
-      const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
-
-      await expect(adapter.signIn(userSignIn)).rejects.toThrow(APIException);
-      await expect(adapter.signIn(userSignIn)).rejects.toThrow('Sign in failed');
+      await expect(resultPromise).rejects.toThrow(APIException);
+      await expect(resultPromise).rejects.toThrow('Sign in failed');
 
       expect(mockSignIn).toHaveBeenCalledWith({
-        email: userSignIn.email,
-        password: userSignIn.password,
+        email: userSignInMock.email,
+        password: userSignInMock.password,
       });
     });
   });

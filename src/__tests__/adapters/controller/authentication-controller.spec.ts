@@ -32,7 +32,7 @@ describe('AuthenticationController', () => {
         blocked: false,
       };
 
-      await expect(controller.signUp(userSignUp)).resolves.toBeUndefined();
+      await controller.signUp(userSignUp);
 
       expect(mockSignUp).toHaveBeenCalledWith(userSignUp);
       expect(controller.getStatus()).toBe(201);
@@ -49,8 +49,9 @@ describe('AuthenticationController', () => {
         blocked: false,
       };
 
-      await expect(controller.signUp(userSignUp)).rejects.toThrow('Sign up failed');
+      const resultPromise = controller.signUp(userSignUp);
 
+      await expect(resultPromise).rejects.toThrow('Sign up failed');
       expect(mockSignUp).toHaveBeenCalledWith(userSignUp);
     });
   });
@@ -64,8 +65,9 @@ describe('AuthenticationController', () => {
 
       const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
 
-      await expect(controller.signIn(userSignIn)).resolves.toEqual(userResponse);
+      const resultPromise = controller.signIn(userSignIn);
 
+      await expect(resultPromise).resolves.toEqual(userResponse);
       expect(mockSignIn).toHaveBeenCalledWith(userSignIn);
     });
 
@@ -75,8 +77,9 @@ describe('AuthenticationController', () => {
 
       const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
 
-      await expect(controller.signIn(userSignIn)).rejects.toThrow('Sign in failed');
+      const resultPromise = controller.signIn(userSignIn);
 
+      await expect(resultPromise).rejects.toThrow('Sign in failed');
       expect(mockSignIn).toHaveBeenCalledWith(userSignIn);
     });
   });

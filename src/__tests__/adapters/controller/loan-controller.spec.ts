@@ -33,7 +33,9 @@ describe('LoanController', () => {
       const borrowGame: BorrowGame = { game_id: 1, lessee_user_id: 'user-id', estimated_delivery_at: new Date() };
       loanServicesMock.create.mockResolvedValue(undefined);
 
-      await expect(controller.create(borrowGame)).resolves.toBeUndefined();
+      const resultPromise = controller.create(borrowGame);
+
+      await expect(resultPromise).resolves.toBeUndefined();
       expect(loanServicesMock.create).toHaveBeenCalledWith(borrowGame);
       expect(controller.getStatus()).toBe(201);
     });
@@ -43,7 +45,9 @@ describe('LoanController', () => {
       const error = new Error('Create loan failed');
       loanServicesMock.create.mockRejectedValue(error);
 
-      await expect(controller.create(borrowGame)).rejects.toThrow('Create loan failed');
+      const resultPromise = controller.create(borrowGame);
+
+      await expect(resultPromise).rejects.toThrow('Create loan failed');
       expect(loanServicesMock.create).toHaveBeenCalledWith(borrowGame);
     });
   });
@@ -53,7 +57,9 @@ describe('LoanController', () => {
       const deliverLoan: DeliverLoan = { id: 1 };
       loanServicesMock.deliver.mockResolvedValue(undefined);
 
-      await expect(controller.deliver(deliverLoan)).resolves.toBeUndefined();
+      const resultPromise = controller.deliver(deliverLoan);
+
+      await expect(resultPromise).resolves.toBeUndefined();
       expect(loanServicesMock.deliver).toHaveBeenCalledWith(deliverLoan);
       expect(controller.getStatus()).toBe(204);
     });
@@ -63,7 +69,9 @@ describe('LoanController', () => {
       const error = new Error('Deliver loan failed');
       loanServicesMock.deliver.mockRejectedValue(error);
 
-      await expect(controller.deliver(deliverLoan)).rejects.toThrow('Deliver loan failed');
+      const resultPromise = controller.deliver(deliverLoan);
+
+      await expect(resultPromise).rejects.toThrow('Deliver loan failed');
       expect(loanServicesMock.deliver).toHaveBeenCalledWith(deliverLoan);
     });
   });

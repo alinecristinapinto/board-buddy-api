@@ -41,8 +41,9 @@ describe('GameServices', () => {
       };
 
       gameRepository.create.mockRejectedValue(new Error('Repository error'));
+      const resultPromise = gameServices.add(newGame);
 
-      await expect(gameServices.add(newGame)).rejects.toThrow('Repository error');
+      await expect(resultPromise).rejects.toThrow('Repository error');
     });
   });
 

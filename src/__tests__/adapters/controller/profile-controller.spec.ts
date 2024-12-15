@@ -25,7 +25,9 @@ describe('ProfileController', () => {
       ];
       profileServicesMock.getAll.mockResolvedValue(profiles);
 
-      await expect(controller.getAll()).resolves.toEqual(profiles);
+      const resultPromise = controller.getAll();
+
+      await expect(resultPromise).resolves.toEqual(profiles);
       expect(profileServicesMock.getAll).toHaveBeenCalled();
       expect(controller.getStatus()).toBe(200);
     });
@@ -34,7 +36,9 @@ describe('ProfileController', () => {
       const error = new Error('Get all profiles failed');
       profileServicesMock.getAll.mockRejectedValue(error);
 
-      await expect(controller.getAll()).rejects.toThrow('Get all profiles failed');
+      const resultPromise = controller.getAll();
+
+      await expect(resultPromise).rejects.toThrow('Get all profiles failed');
       expect(profileServicesMock.getAll).toHaveBeenCalled();
     });
   });
@@ -44,7 +48,9 @@ describe('ProfileController', () => {
       const profile: Profile = { id: '1', name: 'Profile 1', blocked: false };
       profileServicesMock.getDetails.mockResolvedValue(profile);
 
-      await expect(controller.getDetails('1')).resolves.toEqual(profile);
+      const resultPromise = controller.getDetails('1');
+
+      await expect(resultPromise).resolves.toEqual(profile);
       expect(profileServicesMock.getDetails).toHaveBeenCalledWith({ id: '1' });
       expect(controller.getStatus()).toBe(200);
     });
@@ -53,7 +59,9 @@ describe('ProfileController', () => {
       const error = new Error('Get profile details failed');
       profileServicesMock.getDetails.mockRejectedValue(error);
 
-      await expect(controller.getDetails('1')).rejects.toThrow('Get profile details failed');
+      const resultPromise = controller.getDetails('1');
+
+      await expect(resultPromise).rejects.toThrow('Get profile details failed');
       expect(profileServicesMock.getDetails).toHaveBeenCalledWith({ id: '1' });
     });
   });

@@ -62,9 +62,10 @@ describe('PenaltyServices', () => {
       penaltyRepository.findById.mockResolvedValue(penalty);
 
       const payPenalty: PayPenalty = { loan_id: 1, profile_id: '123' };
+      const resultPromise = penaltyServices.pay(payPenalty);
 
-      await expect(penaltyServices.pay(payPenalty)).rejects.toThrow(APIException);
-      await expect(penaltyServices.pay(payPenalty)).rejects.toThrow('Penalty is already payed');
+      await expect(resultPromise).rejects.toThrow(APIException);
+      await expect(resultPromise).rejects.toThrow('Penalty is already payed');
     });
 
     it('throws error if repository update fails', async () => {
@@ -85,8 +86,9 @@ describe('PenaltyServices', () => {
       penaltyRepository.update.mockRejectedValue(new Error('Repository update error'));
 
       const payPenalty: PayPenalty = { loan_id: 1, profile_id: '123' };
+      const resultPromise = penaltyServices.pay(payPenalty);
 
-      await expect(penaltyServices.pay(payPenalty)).rejects.toThrow('Repository update error');
+      await expect(resultPromise).rejects.toThrow('Repository update error');
     });
   });
 });
