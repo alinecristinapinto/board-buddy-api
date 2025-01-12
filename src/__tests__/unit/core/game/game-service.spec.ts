@@ -1,6 +1,6 @@
-import { IGameRepository } from '../../../core/game/ports/game-repository.interface';
-import { AddGame, Game } from '../../../core/game/ports/game.types';
-import { GameServices } from '../../../core/game/usecases/game-services';
+import { IGameRepository } from '../../../../core/game/ports/game-repository.interface';
+import { AddGame, Game } from '../../../../core/game/ports/game.types';
+import { GameServices } from '../../../../core/game/usecases/game-services';
 
 describe('GameServices', () => {
   let gameServices: GameServices;

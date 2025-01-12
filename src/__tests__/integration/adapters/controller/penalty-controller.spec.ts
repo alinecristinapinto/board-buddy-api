@@ -1,12 +1,12 @@
-import { PenaltyController } from '../../../adapters/controller/penalty/penalty-controller';
-import { PenaltyServices } from '../../../core/penalty/usecases/penalty-services';
-import { PenaltyRepository } from '../../../adapters/db/postgresql-supabase/penalty/penalty-repository';
-import { ProfileRepository } from '../../../adapters/db/postgresql-supabase/profile/profile-repository';
-import { PayPenalty } from '../../../core/penalty/ports/penalty.types';
+import { PenaltyController } from '../../../../adapters/controller/penalty/penalty-controller';
+import { PenaltyServices } from '../../../../core/penalty/usecases/penalty-services';
+import { PenaltyRepository } from '../../../../adapters/db/postgresql-supabase/penalty/penalty-repository';
+import { ProfileRepository } from '../../../../adapters/db/postgresql-supabase/profile/profile-repository';
+import { PayPenalty } from '../../../../core/penalty/ports/penalty.types';
 
-jest.mock('../../../core/penalty/usecases/penalty-services');
-jest.mock('../../../adapters/db/postgresql-supabase/penalty/penalty-repository');
-jest.mock('../../../adapters/db/postgresql-supabase/profile/profile-repository');
+jest.mock('../../../../core/penalty/usecases/penalty-services');
+jest.mock('../../../../adapters/db/postgresql-supabase/penalty/penalty-repository');
+jest.mock('../../../../adapters/db/postgresql-supabase/profile/profile-repository');
 
 describe('PenaltyController', () => {
   let controller: PenaltyController;

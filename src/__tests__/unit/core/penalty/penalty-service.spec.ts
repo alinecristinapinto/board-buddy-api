@@ -1,8 +1,8 @@
-import { IPenaltyRepository } from '../../../core/penalty/ports/penalty-repository.interface';
-import { IProfileRepository } from '../../../core/profile/ports/profile-repository.interface';
-import { PenaltyServices } from '../../../core/penalty/usecases/penalty-services';
-import { PayPenalty } from '../../../core/penalty/ports/penalty.types';
-import { APIException } from '../../../core/helpers/api-exception';
+import { IPenaltyRepository } from '../../../../core/penalty/ports/penalty-repository.interface';
+import { IProfileRepository } from '../../../../core/profile/ports/profile-repository.interface';
+import { PenaltyServices } from '../../../../core/penalty/usecases/penalty-services';
+import { PayPenalty } from '../../../../core/penalty/ports/penalty.types';
+import { APIException } from '../../../../core/helpers/api-exception';
 
 describe('PenaltyServices', () => {
   let penaltyServices: PenaltyServices;

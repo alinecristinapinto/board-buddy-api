@@ -1,8 +1,8 @@
-import { AuthenticationController } from '../../../adapters/controller/authentication/authentication-controller';
-import { AuthenticationApiAdapter } from '../../../adapters/api/supabase/authentication-api-adapter';
-import { UserSignIn, UserSignUp, UserResponse } from '../../../core/authentication/ports/authentication.types';
+import { AuthenticationController } from '../../../../adapters/controller/authentication/authentication-controller';
+import { AuthenticationApiAdapter } from '../../../../adapters/api/supabase/authentication-api-adapter';
+import { UserSignIn, UserSignUp, UserResponse } from '../../../../core/authentication/ports/authentication.types';
 
-jest.mock('../../../adapters/api/supabase/authentication-api-adapter');
+jest.mock('../../../../adapters/api/supabase/authentication-api-adapter');
 
 describe('AuthenticationController', () => {
   let controller: AuthenticationController;

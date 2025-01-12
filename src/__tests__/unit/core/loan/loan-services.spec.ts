@@ -1,9 +1,9 @@
-import { LoanServices } from '../../../core/loan/usecases/loan-services';
-import { ILoanRepository } from '../../../core/loan/ports/loan-repository.interface';
-import { IGameRepository } from '../../../core/game/ports/game-repository.interface';
-import { IPenaltyRepository } from '../../../core/penalty/ports/penalty-repository.interface';
-import { IProfileRepository } from '../../../core/profile/ports/profile-repository.interface';
-import { APIException } from '../../../core/helpers/api-exception';
+import { LoanServices } from '../../../../core/loan/usecases/loan-services';
+import { ILoanRepository } from '../../../../core/loan/ports/loan-repository.interface';
+import { IGameRepository } from '../../../../core/game/ports/game-repository.interface';
+import { IPenaltyRepository } from '../../../../core/penalty/ports/penalty-repository.interface';
+import { IProfileRepository } from '../../../../core/profile/ports/profile-repository.interface';
+import { APIException } from '../../../../core/helpers/api-exception';
 
 jest.mock('date-fns', () => ({
   isBefore: jest.fn(),

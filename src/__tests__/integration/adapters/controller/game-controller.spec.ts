@@ -1,10 +1,10 @@
-import { GameController } from '../../../adapters/controller/game/game-controller';
-import { GameServices } from '../../../core/game/usecases/game-services';
-import { GameRepository } from '../../../adapters/db/postgresql-supabase/game/game-repository';
-import { AddGame, Game } from '../../../core/game/ports/game.types';
+import { GameController } from '../../../../adapters/controller/game/game-controller';
+import { GameServices } from '../../../../core/game/usecases/game-services';
+import { GameRepository } from '../../../../adapters/db/postgresql-supabase/game/game-repository';
+import { AddGame, Game } from '../../../../core/game/ports/game.types';
 
-jest.mock('../../../core/game/usecases/game-services');
-jest.mock('../../../adapters/db/postgresql-supabase/game/game-repository');
+jest.mock('../../../../core/game/usecases/game-services');
+jest.mock('../../../../adapters/db/postgresql-supabase/game/game-repository');
 
 describe('GameController', () => {
   let controller: GameController;

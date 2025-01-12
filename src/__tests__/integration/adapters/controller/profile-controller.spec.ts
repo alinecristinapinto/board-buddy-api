@@ -1,10 +1,10 @@
-import { ProfileController } from '../../../adapters/controller/profile/profile-controller';
-import { ProfileServices } from '../../../core/profile/usecases/profile-services';
-import { ProfileRepository } from '../../../adapters/db/postgresql-supabase/profile/profile-repository';
-import { Profile } from '../../../core/profile/ports/profile.types';
+import { ProfileController } from '../../../../adapters/controller/profile/profile-controller';
+import { ProfileServices } from '../../../../core/profile/usecases/profile-services';
+import { ProfileRepository } from '../../../../adapters/db/postgresql-supabase/profile/profile-repository';
+import { Profile } from '../../../../core/profile/ports/profile.types';
 
-jest.mock('../../../core/profile/usecases/profile-services');
-jest.mock('../../../adapters/db/postgresql-supabase/profile/profile-repository');
+jest.mock('../../../../core/profile/usecases/profile-services');
+jest.mock('../../../../adapters/db/postgresql-supabase/profile/profile-repository');
 
 describe('ProfileController', () => {
   let controller: ProfileController;

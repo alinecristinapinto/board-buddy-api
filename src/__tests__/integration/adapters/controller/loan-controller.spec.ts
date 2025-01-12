@@ -1,16 +1,16 @@
-import { LoanController } from '../../../adapters/controller/loan/loan-controller';
-import { LoanServices } from '../../../core/loan/usecases/loan-services';
-import { LoanRepository } from '../../../adapters/db/postgresql-supabase/loan/loan-repository';
-import { GameRepository } from '../../../adapters/db/postgresql-supabase/game/game-repository';
-import { PenaltyRepository } from '../../../adapters/db/postgresql-supabase/penalty/penalty-repository';
-import { ProfileRepository } from '../../../adapters/db/postgresql-supabase/profile/profile-repository';
-import { BorrowGame, DeliverLoan } from '../../../core/loan/ports/loan.types';
+import { LoanController } from '../../../../adapters/controller/loan/loan-controller';
+import { LoanServices } from '../../../../core/loan/usecases/loan-services';
+import { LoanRepository } from '../../../../adapters/db/postgresql-supabase/loan/loan-repository';
+import { GameRepository } from '../../../../adapters/db/postgresql-supabase/game/game-repository';
+import { PenaltyRepository } from '../../../../adapters/db/postgresql-supabase/penalty/penalty-repository';
+import { ProfileRepository } from '../../../../adapters/db/postgresql-supabase/profile/profile-repository';
+import { BorrowGame, DeliverLoan } from '../../../../core/loan/ports/loan.types';
 
-jest.mock('../../../core/loan/usecases/loan-services');
-jest.mock('../../../adapters/db/postgresql-supabase/loan/loan-repository');
-jest.mock('../../../adapters/db/postgresql-supabase/game/game-repository');
-jest.mock('../../../adapters/db/postgresql-supabase/penalty/penalty-repository');
-jest.mock('../../../adapters/db/postgresql-supabase/profile/profile-repository');
+jest.mock('../../../../core/loan/usecases/loan-services');
+jest.mock('../../../../adapters/db/postgresql-supabase/loan/loan-repository');
+jest.mock('../../../../adapters/db/postgresql-supabase/game/game-repository');
+jest.mock('../../../../adapters/db/postgresql-supabase/penalty/penalty-repository');
+jest.mock('../../../../adapters/db/postgresql-supabase/profile/profile-repository');
 
 describe('LoanController', () => {
   let controller: LoanController;

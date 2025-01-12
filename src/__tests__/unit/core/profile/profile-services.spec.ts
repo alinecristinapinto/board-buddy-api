@@ -1,7 +1,7 @@
-import { ProfileServices } from '../../../core/profile/usecases/profile-services';
-import { IProfileRepository } from '../../../core/profile/ports/profile-repository.interface';
-import { APIException } from '../../../core/helpers/api-exception';
-import { Profile } from '../../../core/profile//ports/profile.types';
+import { ProfileServices } from '../../../../core/profile/usecases/profile-services';
+import { IProfileRepository } from '../../../../core/profile/ports/profile-repository.interface';
+import { APIException } from '../../../../core/helpers/api-exception';
+import { Profile } from '../../../../core/profile/ports/profile.types';
 
 describe('ProfileServices', () => {
   let profileRepository: jest.Mocked<IProfileRepository>;

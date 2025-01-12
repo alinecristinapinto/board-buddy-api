@@ -1,9 +1,9 @@
-import { AuthenticationApiAdapter } from '../../../adapters/api/supabase/authentication-api-adapter';
-import { supabase } from '../../../adapters/helpers/supabase-client';
-import { APIException } from '../../../core/helpers/api-exception';
-import { UserSignIn, UserSignUp } from '../../../core/authentication/ports/authentication.types';
+import { AuthenticationApiAdapter } from '../../../../adapters/api/supabase/authentication-api-adapter';
+import { supabase } from '../../../../adapters/helpers/supabase-client';
+import { APIException } from '../../../../core/helpers/api-exception';
+import { UserSignIn, UserSignUp } from '../../../../core/authentication/ports/authentication.types';
 
-jest.mock('../../../adapters/helpers/supabase-client');
+jest.mock('../../../../adapters/helpers/supabase-client');
 
 describe('AuthenticationApiAdapter', () => {
   let adapter: AuthenticationApiAdapter;
