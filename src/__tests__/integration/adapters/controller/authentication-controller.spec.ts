@@ -1,29 +1,31 @@
 import { AuthenticationController } from '../../../../adapters/controller/authentication/authentication-controller';
-import { AuthenticationApiAdapter } from '../../../../adapters/api/supabase/authentication-api-adapter';
-import { UserSignIn, UserSignUp, UserResponse } from '../../../../core/authentication/ports/authentication.types';
+import { supabase } from '../../../../adapters/helpers/supabase-client';
+import { UserSignIn, UserSignUp } from '../../../../core/authentication/ports/authentication.types';
 
-jest.mock('../../../../adapters/api/supabase/authentication-api-adapter');
+jest.mock('../../../../adapters/helpers/supabase-client');
 
-describe('AuthenticationController', () => {
+describe('AuthenticationController - Integration Tests', () => {
   let controller: AuthenticationController;
-  let mockSignUp: jest.Mock;
-  let mockSignIn: jest.Mock;
 
   beforeEach(() => {
     controller = new AuthenticationController();
-
-    mockSignUp = jest.fn();
-    mockSignIn = jest.fn();
-
-    (AuthenticationApiAdapter as jest.Mock).mockImplementation(() => ({
-      signUp: mockSignUp,
-      signIn: mockSignIn,
-    }));
   });
 
-  describe('signUp', () => {
-    it('calls signUp on AuthenticationApiAdapter and set status to 201', async () => {
-      mockSignUp.mockResolvedValue(undefined);
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+  });
+
+  describe('when calling signUp', () => {
+    it('creates the user account', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        auth: {
+          signUp: jest.fn(async () => ({
+            data: {},
+            error: null,
+          })),
+        },
+      });
 
       const userSignUp: UserSignUp = {
         email: 'test@example.com',
@@ -34,53 +36,78 @@ describe('AuthenticationController', () => {
 
       await controller.signUp(userSignUp);
 
-      expect(mockSignUp).toHaveBeenCalledWith(userSignUp);
       expect(controller.getStatus()).toBe(201);
     });
 
-    it('throws an error if signUp on AuthenticationApiAdapter throws', async () => {
-      const error = new Error('Sign up failed');
-      mockSignUp.mockRejectedValue(error);
+    describe('and an error happens', () => {
+      it('returns an error to the client', async () => {
+        (supabase as jest.Mock).mockReturnValue({
+          auth: {
+            signUp: jest.fn(async () => ({
+              data: null,
+              error: { message: 'Sign up failed', status: 400 },
+            })),
+          },
+        });
 
-      const userSignUp: UserSignUp = {
-        email: 'test@example.com',
-        password: 'password',
-        name: 'Test User',
-        blocked: false,
-      };
+        const userSignUp: UserSignUp = {
+          email: 'test@example.com',
+          password: 'password',
+          name: 'Test User',
+          blocked: false,
+        };
 
-      const resultPromise = controller.signUp(userSignUp);
-
-      await expect(resultPromise).rejects.toThrow('Sign up failed');
-      expect(mockSignUp).toHaveBeenCalledWith(userSignUp);
+        await expect(controller.signUp(userSignUp)).rejects.toThrow('Sign up failed');
+        expect(controller.getStatus()).toBe(400);
+      });
     });
   });
 
   describe('signIn', () => {
-    it('calls signIn on AuthenticationApiAdapter and return UserResponse', async () => {
-      const userResponse: UserResponse = {
-        session: { access_token: 'token', user: { id: 'user-id', email: 'test@example.com' } },
-      };
-      mockSignIn.mockResolvedValue(userResponse);
+    it('signs in the user', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        auth: {
+          signInWithPassword: jest.fn(async () => ({
+            data: {
+              session: {
+                access_token: 'mock-access-token',
+                user: { id: 'mock-user-id', email: 'test@example.com' },
+              },
+            },
+            error: null,
+          })),
+        },
+      });
 
       const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
 
-      const resultPromise = controller.signIn(userSignIn);
+      const response = await controller.signIn(userSignIn);
 
-      await expect(resultPromise).resolves.toEqual(userResponse);
-      expect(mockSignIn).toHaveBeenCalledWith(userSignIn);
+      expect(response).toEqual({
+        session: {
+          access_token: 'mock-access-token',
+          user: { id: 'mock-user-id', email: 'test@example.com' },
+        },
+      });
+      expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if signIn on AuthenticationApiAdapter throws', async () => {
-      const error = new Error('Sign in failed');
-      mockSignIn.mockRejectedValue(error);
+    describe('and an error happens', () => {
+      it('returns an error to the client', async () => {
+        (supabase as jest.Mock).mockReturnValue({
+          auth: {
+            signInWithPassword: jest.fn(async () => ({
+              data: null,
+              error: { message: 'Sign in failed', status: 401 },
+            })),
+          },
+        });
 
-      const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
+        const userSignIn: UserSignIn = { email: 'test@example.com', password: 'password' };
 
-      const resultPromise = controller.signIn(userSignIn);
-
-      await expect(resultPromise).rejects.toThrow('Sign in failed');
-      expect(mockSignIn).toHaveBeenCalledWith(userSignIn);
+        await expect(controller.signIn(userSignIn)).rejects.toThrow('Sign in failed');
+        expect(controller.getStatus()).toBe(401);
+      });
     });
   });
 });
