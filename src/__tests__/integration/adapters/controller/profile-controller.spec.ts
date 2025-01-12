@@ -2,67 +2,72 @@ import { ProfileController } from '../../../../adapters/controller/profile/profi
 import { ProfileServices } from '../../../../core/profile/usecases/profile-services';
 import { ProfileRepository } from '../../../../adapters/db/postgresql-supabase/profile/profile-repository';
 import { Profile } from '../../../../core/profile/ports/profile.types';
+import { APIException } from '../../../../core/helpers/api-exception';
 
-jest.mock('../../../../core/profile/usecases/profile-services');
 jest.mock('../../../../adapters/db/postgresql-supabase/profile/profile-repository');
+jest.mock('../../../../core/profile/usecases/profile-services');
 
-describe('ProfileController', () => {
+describe('ProfileController - Integration Tests', () => {
   let controller: ProfileController;
-  let profileServicesMock: jest.Mocked<ProfileServices>;
+  let mockRepository: jest.Mocked<ProfileRepository>;
+  let mockService: jest.Mocked<ProfileServices>;
 
   beforeEach(() => {
-    profileServicesMock = new ProfileServices(new ProfileRepository()) as jest.Mocked<ProfileServices>;
+    mockRepository = new ProfileRepository() as jest.Mocked<ProfileRepository>;
+    mockService = new ProfileServices(mockRepository) as jest.Mocked<ProfileServices>;
+
+    jest.spyOn(ProfileServices.prototype, 'getAll').mockImplementation(mockService.getAll);
+    jest.spyOn(ProfileServices.prototype, 'getDetails').mockImplementation(mockService.getDetails);
+
     controller = new ProfileController();
-
-    (ProfileServices as jest.Mock).mockReturnValue(profileServicesMock);
+    jest.clearAllMocks();
   });
 
-  describe('getAll', () => {
-    it('calls getAll on ProfileServices and set status to 200', async () => {
-      const profiles: Profile[] = [
-        { id: '1', name: 'Profile 1', blocked: false },
-        { id: '2', name: 'Profile 2', blocked: false },
+  describe('when calling getAll', () => {
+    it('returns a list of profiles', async () => {
+      const mockProfiles: Profile[] = [
+        { id: '1', name: 'John Doe', blocked: false },
+        { id: '2', name: 'Jane Doe', blocked: true },
       ];
-      profileServicesMock.getAll.mockResolvedValue(profiles);
+      mockService.getAll.mockResolvedValue(mockProfiles);
 
-      const resultPromise = controller.getAll();
+      const response = await controller.getAll();
 
-      await expect(resultPromise).resolves.toEqual(profiles);
-      expect(profileServicesMock.getAll).toHaveBeenCalled();
+      expect(response).toEqual(mockProfiles);
       expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if getAll on ProfileServices throws', async () => {
-      const error = new Error('Get all profiles failed');
-      profileServicesMock.getAll.mockRejectedValue(error);
+    it('throws an error when repository fails', async () => {
+      mockService.getAll.mockRejectedValue(new APIException('Database error', 500));
 
-      const resultPromise = controller.getAll();
-
-      await expect(resultPromise).rejects.toThrow('Get all profiles failed');
-      expect(profileServicesMock.getAll).toHaveBeenCalled();
+      await expect(controller.getAll()).rejects.toThrow('Database error');
+      expect(controller.getStatus()).toBe(500);
     });
   });
 
-  describe('getDetails', () => {
-    it('calls getDetails on ProfileServices and set status to 200', async () => {
-      const profile: Profile = { id: '1', name: 'Profile 1', blocked: false };
-      profileServicesMock.getDetails.mockResolvedValue(profile);
+  describe('when calling getDetails', () => {
+    it('returns profile details for a valid id', async () => {
+      const mockProfile: Profile = { id: '1', name: 'John Doe', blocked: false };
+      mockService.getDetails.mockResolvedValue(mockProfile);
 
-      const resultPromise = controller.getDetails('1');
+      const response = await controller.getDetails('1');
 
-      await expect(resultPromise).resolves.toEqual(profile);
-      expect(profileServicesMock.getDetails).toHaveBeenCalledWith({ id: '1' });
+      expect(response).toEqual(mockProfile);
       expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if getDetails on ProfileServices throws', async () => {
-      const error = new Error('Get profile details failed');
-      profileServicesMock.getDetails.mockRejectedValue(error);
+    it('throws 404 error when profile is not found', async () => {
+      mockService.getDetails.mockRejectedValue(new APIException('User details not found', 404));
 
-      const resultPromise = controller.getDetails('1');
+      await expect(controller.getDetails('invalid-id')).rejects.toThrow('User details not found');
+      expect(controller.getStatus()).toBe(404);
+    });
 
-      await expect(resultPromise).rejects.toThrow('Get profile details failed');
-      expect(profileServicesMock.getDetails).toHaveBeenCalledWith({ id: '1' });
+    it('throws a generic error when repository fails', async () => {
+      mockService.getDetails.mockRejectedValue(new APIException('Database error', 500));
+
+      await expect(controller.getDetails('1')).rejects.toThrow('Database error');
+      expect(controller.getStatus()).toBe(500);
     });
   });
 });

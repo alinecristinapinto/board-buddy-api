@@ -25,6 +25,8 @@ export class ProfileRepository implements IProfileRepository {
       .returns<Profile[]>()
       .limit(1);
 
+    console.log(error);
+
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
     return data[0];
