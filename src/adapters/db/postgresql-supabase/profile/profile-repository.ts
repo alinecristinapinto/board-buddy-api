@@ -18,25 +18,34 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async findById(id: string): Promise<Profile> {
-    const { data, error } = await supabase<Database>()
-      .from('profile')
-      .select()
-      .eq('id', id)
-      .returns<Profile[]>()
-      .limit(1);
-
-    console.log(error);
+    const { data, error } = await supabase<Database>().from('profile').select('*').eq('id', id).limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data[0];
+    if (!data || data.length === 0) {
+      throw new APIException('User details not found', 404);
+    }
+
+    const profile = data[0];
+
+    return {
+      ...profile,
+      name: profile.name ?? '',
+      blocked: profile.blocked ?? false,
+    };
   }
 
   async findAll(): Promise<Profile[]> {
-    const { data, error } = await supabase<Database>().from('profile').select().returns<Profile[]>();
+    const { data, error } = await supabase<Database>().from('profile').select('*');
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data;
+    if (!data) return [];
+
+    return data.map((profile) => ({
+      id: profile.id,
+      name: profile.name ?? '',
+      blocked: profile.blocked ?? false,
+    }));
   }
 }

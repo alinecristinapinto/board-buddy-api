@@ -26,15 +26,20 @@ export class PenaltyRepository implements IPenaltyRepository {
   }
 
   async findById(loan_id: number): Promise<Penalty> {
-    const { data, error } = await supabase<Database>()
-      .from('penalty')
-      .select()
-      .eq('loan_id', loan_id)
-      .returns<Penalty[]>()
-      .limit(1);
+    const { data, error } = await supabase<Database>().from('penalty').select('*').eq('loan_id', loan_id).limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data[0];
+    if (!data || data.length === 0) {
+      throw new APIException('Penalty not found', 404);
+    }
+
+    const penalty = {
+      ...data[0],
+      created_at: new Date(data[0].created_at),
+      payed_at: data[0].payed_at ? new Date(data[0].payed_at) : undefined,
+    };
+
+    return penalty;
   }
 }

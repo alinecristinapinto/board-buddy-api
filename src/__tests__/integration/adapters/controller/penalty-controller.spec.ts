@@ -1,48 +1,107 @@
 import { PenaltyController } from '../../../../adapters/controller/penalty/penalty-controller';
-import { PenaltyServices } from '../../../../core/penalty/usecases/penalty-services';
-import { PenaltyRepository } from '../../../../adapters/db/postgresql-supabase/penalty/penalty-repository';
-import { ProfileRepository } from '../../../../adapters/db/postgresql-supabase/profile/profile-repository';
+import { supabase } from '../../../../adapters/helpers/supabase-client';
 import { PayPenalty } from '../../../../core/penalty/ports/penalty.types';
 
-jest.mock('../../../../core/penalty/usecases/penalty-services');
-jest.mock('../../../../adapters/db/postgresql-supabase/penalty/penalty-repository');
-jest.mock('../../../../adapters/db/postgresql-supabase/profile/profile-repository');
+jest.mock('../../../../adapters/helpers/supabase-client');
 
-describe('PenaltyController', () => {
+describe('PenaltyController - Integration Tests', () => {
   let controller: PenaltyController;
-  let penaltyServicesMock: jest.Mocked<PenaltyServices>;
 
   beforeEach(() => {
-    penaltyServicesMock = new PenaltyServices(
-      new PenaltyRepository(),
-      new ProfileRepository(),
-    ) as jest.Mocked<PenaltyServices>;
     controller = new PenaltyController();
-
-    (PenaltyServices as jest.Mock).mockReturnValue(penaltyServicesMock);
+    jest.clearAllMocks();
   });
 
-  describe('pay', () => {
-    it('calls pay on PenaltyServices and set status to 204', async () => {
+  describe('when calling pay', () => {
+    it('calls Supabase to update penalty and profile, and sets status to 204', async () => {
       const payPenalty: PayPenalty = { loan_id: 1, profile_id: 'profile-id' };
-      penaltyServicesMock.pay.mockResolvedValue(undefined);
 
-      const resultPromise = controller.pay(payPenalty);
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: [{ loan_id: 1, payed_at: null }],
+                error: null,
+              }),
+            }),
+          }),
+          update: jest.fn().mockReturnValue({
+            eq: jest.fn().mockResolvedValue({
+              data: null,
+              error: null,
+            }),
+          }),
+        }),
+      });
 
-      await expect(resultPromise).resolves.toBeUndefined();
-      expect(penaltyServicesMock.pay).toHaveBeenCalledWith(payPenalty);
+      await controller.pay(payPenalty);
+
       expect(controller.getStatus()).toBe(204);
     });
 
-    it('throws an error if pay on PenaltyServices throws', async () => {
+    it('throws an error when Supabase fails during penalty update', async () => {
       const payPenalty: PayPenalty = { loan_id: 1, profile_id: 'profile-id' };
-      const error = new Error('Pay penalty failed');
-      penaltyServicesMock.pay.mockRejectedValue(error);
 
-      const resultPromise = controller.pay(payPenalty);
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: [{ loan_id: 1, created_at: '2023-01-01T00:00:00.000Z', payed_at: null }],
+                error: null,
+              }),
+            }),
+          }),
+          update: jest.fn().mockReturnValue({
+            eq: jest.fn().mockResolvedValue({
+              data: null,
+              error: { message: 'Database update failed - Invalid data', status: 400 },
+            }),
+          }),
+        }),
+      });
 
-      await expect(resultPromise).rejects.toThrow('Pay penalty failed');
-      expect(penaltyServicesMock.pay).toHaveBeenCalledWith(payPenalty);
+      await expect(controller.pay(payPenalty)).rejects.toThrow('Database update failed - Invalid data');
+      expect(controller.getStatus()).toBe(400);
+    });
+
+    it('throws an error when penalty is already paid', async () => {
+      const payPenalty: PayPenalty = { loan_id: 1, profile_id: 'profile-id' };
+
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: [{ loan_id: 1, payed_at: new Date() }],
+                error: null,
+              }),
+            }),
+          }),
+        }),
+      });
+
+      await expect(controller.pay(payPenalty)).rejects.toThrow('Penalty is already payed');
+    });
+
+    it('throws an error when penalty does not exist', async () => {
+      const payPenalty: PayPenalty = { loan_id: 1, profile_id: 'profile-id' };
+
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: [],
+                error: null,
+              }),
+            }),
+          }),
+        }),
+      });
+
+      await expect(controller.pay(payPenalty)).rejects.toThrow('Penalty not found');
     });
   });
 });
