@@ -1,131 +1,199 @@
 import { GameController } from '../../../../adapters/controller/game/game-controller';
-import { GameServices } from '../../../../core/game/usecases/game-services';
-import { GameRepository } from '../../../../adapters/db/postgresql-supabase/game/game-repository';
+import { supabase } from '../../../../adapters/helpers/supabase-client';
 import { AddGame, Game } from '../../../../core/game/ports/game.types';
 
-jest.mock('../../../../core/game/usecases/game-services');
-jest.mock('../../../../adapters/db/postgresql-supabase/game/game-repository');
+jest.mock('../../../../adapters/helpers/supabase-client');
 
-describe('GameController', () => {
+describe('GameController - Integration Tests', () => {
   let controller: GameController;
-  let gameServicesMock: jest.Mocked<GameServices>;
 
   beforeEach(() => {
-    gameServicesMock = new GameServices(new GameRepository()) as jest.Mocked<GameServices>;
     controller = new GameController();
-
-    (GameServices as jest.Mock).mockReturnValue(gameServicesMock);
+    jest.clearAllMocks();
   });
 
-  describe('add', () => {
-    it('calls add on GameServices and set status to 201', async () => {
+  describe('when calling add', () => {
+    it('creates a new game', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          insert: jest.fn().mockResolvedValue({ data: null, error: null }),
+        }),
+      });
+
       const addGame: AddGame = {
         name: 'Test Game',
         description: 'Test Description',
         user_id: 'user-id',
         available: true,
       };
-      gameServicesMock.add.mockResolvedValue(undefined);
 
-      const resultPromise = controller.add(addGame);
+      await controller.add(addGame);
 
-      await expect(resultPromise).resolves.toBeUndefined();
-      expect(gameServicesMock.add).toHaveBeenCalledWith(addGame);
       expect(controller.getStatus()).toBe(201);
     });
 
-    it('throws an error if add on GameServices throws', async () => {
+    it('throws an error when Supabase fails during game creation', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          insert: jest.fn().mockResolvedValue({
+            data: null,
+            error: { message: 'Database insert failed', status: 400 },
+          }),
+        }),
+      });
+
       const addGame: AddGame = {
         name: 'Test Game',
         description: 'Test Description',
         user_id: 'user-id',
         available: true,
       };
-      const error = new Error('Add game failed');
-      gameServicesMock.add.mockRejectedValue(error);
 
-      const resultPromise = controller.add(addGame);
-
-      await expect(resultPromise).rejects.toThrow('Add game failed');
-      expect(gameServicesMock.add).toHaveBeenCalledWith(addGame);
+      await expect(controller.add(addGame)).rejects.toThrow('Database insert failed');
+      expect(controller.getStatus()).toBe(400);
     });
   });
 
-  describe('getDetails', () => {
-    it('calls getDetails on GameServices and set status to 200', async () => {
-      const game: Game = {
+  describe('when calling getDetails', () => {
+    it('returns game details for a valid id', async () => {
+      const mockGame: Game = {
         id: 1,
         name: 'Test Game',
         description: 'Test Description',
         user_id: 'user-id',
         available: true,
       };
-      gameServicesMock.getDetails.mockResolvedValue(game);
 
-      const resultPromise = controller.getDetails(1);
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: [mockGame],
+                error: null,
+              }),
+            }),
+          }),
+        }),
+      });
 
-      await expect(resultPromise).resolves.toEqual(game);
-      expect(gameServicesMock.getDetails).toHaveBeenCalledWith(1);
+      const response = await controller.getDetails(1);
+
+      expect(response).toEqual(mockGame);
       expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if getDetails on GameServices throws', async () => {
-      const error = new Error('Get details failed');
-      gameServicesMock.getDetails.mockRejectedValue(error);
+    it('throws an error when Supabase fails during fetching details', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              limit: jest.fn().mockResolvedValue({
+                data: null,
+                error: { message: 'Database error', status: 400 },
+              }),
+            }),
+          }),
+        }),
+      });
 
-      const resultPromise = controller.getDetails(1);
-
-      await expect(resultPromise).rejects.toThrow('Get details failed');
-      expect(gameServicesMock.getDetails).toHaveBeenCalledWith(1);
+      await expect(controller.getDetails(1)).rejects.toThrow('Database error');
+      expect(controller.getStatus()).toBe(400);
     });
   });
 
-  describe('getAll', () => {
-    it('calls getAll on GameServices and set status to 200', async () => {
-      const games: Game[] = [
-        { id: 1, name: 'Test Game 1', description: 'Test Description 1', user_id: 'user-id-1', available: true },
-        { id: 2, name: 'Test Game 2', description: 'Test Description 2', user_id: 'user-id-2', available: true },
+  describe('when calling getAll', () => {
+    it('returns all games', async () => {
+      const mockGames: Game[] = [
+        {
+          id: 1,
+          name: 'Test Game 1',
+          description: 'Desc 1',
+          user_id: 'user-123',
+          available: true,
+        },
+        {
+          id: 2,
+          name: 'Test Game 2',
+          description: 'Desc 2',
+          user_id: 'user-456',
+          available: false,
+        },
       ];
-      gameServicesMock.getAll.mockResolvedValue(games);
 
-      await expect(controller.getAll()).resolves.toEqual(games);
-      expect(gameServicesMock.getAll).toHaveBeenCalled();
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockResolvedValue({
+            data: mockGames,
+            error: null,
+          }),
+        }),
+      });
+
+      const response = await controller.getAll();
+
+      expect(response).toEqual(mockGames);
       expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if getAll on GameServices throws', async () => {
-      const error = new Error('Get all failed');
-      gameServicesMock.getAll.mockRejectedValue(error);
+    it('throws an error when Supabase fails during fetching all games', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockResolvedValue({
+            data: null,
+            error: { message: 'Database error', status: 400 },
+          }),
+        }),
+      });
 
-      const resultPromise = controller.getAll();
-
-      await expect(resultPromise).rejects.toThrow('Get all failed');
-      expect(gameServicesMock.getAll).toHaveBeenCalled();
+      await expect(controller.getAll()).rejects.toThrow('Database error');
+      expect(controller.getStatus()).toBe(400);
     });
   });
 
-  describe('getByName', () => {
-    it('calls getByName on GameServices and set status to 200', async () => {
-      const games: Game[] = [
-        { id: 1, name: 'Test Game', description: 'Test Description', user_id: 'user-id', available: true },
+  describe('when calling getByName', () => {
+    it('returns games matching the name', async () => {
+      const mockGames: Game[] = [
+        {
+          id: 1,
+          name: 'Test Game',
+          description: 'Desc 1',
+          user_id: 'user-123',
+          available: true,
+        },
       ];
-      gameServicesMock.getByName.mockResolvedValue(games);
 
-      const resultPromise = controller.getByName('Test Game');
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            ilike: jest.fn().mockResolvedValue({
+              data: mockGames,
+              error: null,
+            }),
+          }),
+        }),
+      });
 
-      await expect(resultPromise).resolves.toEqual(games);
-      expect(gameServicesMock.getByName).toHaveBeenCalledWith('Test Game');
+      const response = await controller.getByName('Test Game');
+
+      expect(response).toEqual(mockGames);
       expect(controller.getStatus()).toBe(200);
     });
 
-    it('throws an error if getByName on GameServices throws', async () => {
-      const error = new Error('Get by name failed');
-      gameServicesMock.getByName.mockRejectedValue(error);
+    it('throws an error when Supabase fails during fetching by name', async () => {
+      (supabase as jest.Mock).mockReturnValue({
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            ilike: jest.fn().mockResolvedValue({
+              data: null,
+              error: { message: 'Database error', status: 400 },
+            }),
+          }),
+        }),
+      });
 
-      const resultPromise = controller.getByName('Test Game');
-
-      await expect(resultPromise).rejects.toThrow('Get by name failed');
-      expect(gameServicesMock.getByName).toHaveBeenCalledWith('Test Game');
+      await expect(controller.getByName('Test Game')).rejects.toThrow('Database error');
+      expect(controller.getStatus()).toBe(400);
     });
   });
 });

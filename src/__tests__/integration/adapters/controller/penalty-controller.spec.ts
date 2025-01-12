@@ -83,6 +83,7 @@ describe('PenaltyController - Integration Tests', () => {
       });
 
       await expect(controller.pay(payPenalty)).rejects.toThrow('Penalty is already payed');
+      expect(controller.getStatus()).toBe(400);
     });
 
     it('throws an error when penalty does not exist', async () => {
@@ -102,6 +103,7 @@ describe('PenaltyController - Integration Tests', () => {
       });
 
       await expect(controller.pay(payPenalty)).rejects.toThrow('Penalty not found');
+      expect(controller.getStatus()).toBe(404);
     });
   });
 });

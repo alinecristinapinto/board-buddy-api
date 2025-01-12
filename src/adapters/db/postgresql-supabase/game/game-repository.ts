@@ -24,30 +24,52 @@ export class GameRepository implements IGameRepository {
   }
 
   async findById(id: number): Promise<Game> {
-    const { data, error } = await supabase<Database>().from('game').select().eq('id', id).returns<Game[]>().limit(1);
+    const { data, error } = await supabase<Database>().from('game').select('*').eq('id', id).limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data[0];
+    if (!data || data.length === 0) {
+      throw new APIException('Game not found', 404);
+    }
+
+    const game = data[0];
+
+    return {
+      id: game.id,
+      name: game.name || '',
+      description: game.description || '',
+      available: game.available ?? false,
+      user_id: game.user_id || '',
+    };
   }
 
   async findByName(name: string): Promise<Game[]> {
-    const { data, error } = await supabase<Database>()
-      .from('game')
-      .select()
-      .ilike('name', `%${name}%`)
-      .returns<Game[]>();
+    const { data, error } = await supabase<Database>().from('game').select('*').ilike('name', `%${name}%`);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data;
+    if (!data) return [];
+
+    return data.map((item) => ({
+      id: item.id,
+      name: item.name || '',
+      description: item.description || '',
+      available: item.available ?? false,
+      user_id: item.user_id || '',
+    }));
   }
 
   async findAll(): Promise<Game[]> {
-    const { data, error } = await supabase<Database>().from('game').select().returns<Game[]>();
+    const { data, error } = await supabase<Database>().from('game').select('*');
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data;
+    return data.map((item) => ({
+      id: item.id,
+      name: item.name || '',
+      description: item.description || '',
+      available: item.available ?? false,
+      user_id: item.user_id || '',
+    }));
   }
 }

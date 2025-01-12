@@ -32,10 +32,22 @@ export class LoanRepository implements ILoanRepository {
   }
 
   async findById(id: number): Promise<Loan> {
-    const { data, error } = await supabase<Database>().from('loan').select().eq('id', id).returns<Loan[]>().limit(1);
+    const { data, error } = await supabase<Database>().from('loan').select('*').eq('id', id).limit(1);
 
     if (error) throw new APIException(`${error.code} - ${error.details} - ${error.message}`, 400);
 
-    return data[0];
+    if (!data || data.length === 0) {
+      throw new APIException('Loan not found', 404);
+    }
+
+    const loan = data[0];
+
+    return {
+      id: loan.id,
+      delivered_at: loan.delivered_at ? new Date(loan.delivered_at) : new Date(),
+      estimated_delivery_at: loan.estimated_delivery_at ? new Date(loan.estimated_delivery_at) : new Date(),
+      game_id: loan.game_id ?? -1,
+      lessee_user_id: loan.lessee_user_id ?? '',
+    };
   }
 }
